@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-type GmailSender struct {
+type Gmailer struct {
 	GmailAddr     string
 	GmailPassword string
 	To            []string
@@ -17,7 +17,7 @@ type GmailSender struct {
 	Body          []byte
 }
 
-func (g *GmailSender) build() ([]byte, bool) {
+func (g *Gmailer) build() ([]byte, bool) {
 	if g.GmailAddr == "" || len(g.To) == 0 {
 		return nil, false
 	}
@@ -35,7 +35,7 @@ func (g *GmailSender) build() ([]byte, bool) {
 	return []byte(ret), true
 }
 
-func (g *GmailSender) Send() (error) {
+func (g *Gmailer) Send() (error) {
 	auth := smtp.PlainAuth("", g.GmailAddr, g.GmailPassword, "smtp.gmail.com")
 	msg, ok := g.build()
 	if !ok {
@@ -44,7 +44,7 @@ func (g *GmailSender) Send() (error) {
 	return smtp.SendMail( "smtp.gmail.com:587", auth, g.GmailAddr, append(append(g.To, g.CC...), g.BCC...), msg)
 }
 
-func (g *GmailSender) Print() {
+func (g *Gmailer) Print() {
 	fmt.Println("From:", g.GmailAddr)
 	fmt.Println("Cc:", g.CC)
 	fmt.Println("Bcc:", g.BCC)
